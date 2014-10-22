@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
-{% begin body %}
+{% block body %}
 {% if session.logged_in %}
-<form action= "{{ get_url('add_entry') }}" method=post class=add-entry>
+<form action= "{{ url_for('add_entry') }}" method=post class=add-entry>
 	<dl>
 		<dt>Title:
 		<dd><input type=text size=30 name=title>
@@ -18,4 +18,5 @@
 	{% endfor %}
 	</ul>
 </form>
-{% end body %}
+{% endif %}
+{% endblock  %}

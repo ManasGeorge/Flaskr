@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, g, abort, flash, g, render_template, redirect, url_for
+from flask import Flask, g, abort, flash, g, render_template, redirect, url_for, request, session
 from contextlib import closing
 
 # Config
@@ -27,7 +27,7 @@ def before_request():
 	g.db = connect_db()
 
 @app.teardown_request
-def teardown_request():
+def teardown_request(exception):
 	db = getattr(g, 'db', None)
 	if db is not None:
 		db.close()
@@ -66,7 +66,7 @@ def login():
 def logout():
 	session.pop('logged_in', None)
 	flash('Logged out!')
-	redirect(url_for('show_entries'))
+	return redirect(url_for('show_entries'))
 
 
 if __name__ == '__main__':
