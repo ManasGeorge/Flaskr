@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, g, abort, flash, g 
+from flask import Flask, g, abort, flash, g, render_template
 from contextlib import closing
 
 # Config
@@ -26,11 +26,17 @@ def init_db():
 def before_request():
 	g.db = connect_db()
 
-@app.teardown_request:
+@app.teardown_request
 def teardown_request():
 	db = getattr(g, 'db', None)
 	if db is not None:
 		db.close()
+
+@app.route('/')
+def show_entries():
+	cur = g.db.execute('select title, text from entries order by id desc')
+	entries = [dict(title=row[0], text=row[1]) for row in cur.fetchall()]
+	return render_template('show_entries.html', entries=entries)
 
 if __name__ == '__main__':
 	app.run()
